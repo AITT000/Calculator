@@ -20,7 +20,27 @@ void rm_space(char *);
 void mv_char_array(char *, int, int, int);
 void mv_double_array(double *, int, int, int);
 
+/*
+이제 여기에서 말해도 될듯?
+ㅇㅇ
+그 이게 이상한게 아니었고 그냥 구름 계정으로 커밋이 되는건가봄
+커밋 로그 확인해봤는데 BrewBan으로 뜨네
 
+그럼 계정 괜히 지운ㄱ너가
+ㅇ필요 없는거였지 않나? 그건 맞는데 살짝 아직 미숙한 아이의 짬통이랄까
+여튼
+튼
+이ㅋ이제 뭐하면 되지 니코드보고 ㅋㄴ저ㄴ
+
+일단 내꺼 빌드 되는지부터 봐봐
+
+find: paths must precede expression: `main.c'
+find: possible unquoted pattern after predicate `-name'?
+/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/Scrt1.o: In function `_start':
+(.text+0x20): undefined reference to `main'
+collect2: error: ld returned 1 exit status
+
+*/
 
 int main(void) {
   // 17자리 이상 계산값의 경우 계산 정확도 손실 발생 -_- (ex : 123456789*123456789)
