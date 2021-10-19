@@ -20,6 +20,8 @@ void rm_space(char *);
 void mv_char_array(char *, int, int, int);
 void mv_double_array(double *, int, int, int);
 
+
+
 int main(void) {
   // 17자리 이상 계산값의 경우 계산 정확도 손실 발생 -_- (ex : 123456789*123456789)
   // double형 정밀도 오류 (ex : 36.5-3+38.7-33.4+1.1*2)
