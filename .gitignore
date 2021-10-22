@@ -1,4 +1,6 @@
 src/main.exe
+src/main.pdb
 src/main_ori.exe
+src/main_mod.exe
 src/calculator_ex.exe
 src/calculator_ex.out
