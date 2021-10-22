@@ -36,7 +36,7 @@ int main(void) {
   }
 
   double result = handle_brackets(input, (int)NULL);
-  long result_long = (double)result;
+  long result_long = (long)result;
 
   if (result == (double)result_long) {
     printf("Result : %ld\n", result_long);
