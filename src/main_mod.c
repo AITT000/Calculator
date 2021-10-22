@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+// 디스코드 친구 추가는 뒤에 코드 네자리 더 넣어야 되네
+// 아이디에다가 1729 붙이면 된다.
+
 #define MAXL 100
 
 typedef struct _result {
