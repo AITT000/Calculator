@@ -6,16 +6,17 @@
 
 int brace_searching(char * buf, char * subbuf, char * opbuf, double * numbuf, char * convbuf, int start, int buf_max);
 void subbuflize(char * buf, char * subbuf, int start, int end);
-void opnumbuflize(char * subbuf, char * opbuf, double * numbuf, char * convbuf, int start, int end);
-void opnumbuflize_for_buf(char * buf, char * opbuf, double * numbuf, char * convbuf, int);
+void opnumbuflize(char * subbuf, char * opbuf, double * numbuf, char * convbuf, int start, int end, int cnt);
+void opnumbuflize_for_buf(char * buf, char * opbuf, double * numbuf, char * convbuf, int, int);
 double convert_buflize(char * from, char * to, int E, int S);
 void one_pullc(char * s, int pull_start);
 void one_pulln(double * s, int pull_start);
 void calc(double * numbuf, char * opbuf);
 void buf_init(char * s);
-void rearrange(char * buf, char * subbuf, int start, int end);
+void rearrange(double * numbuf, char * subbuf, int start, int end, int cnt);
 
-double temporary = 0;
+double temporary[MAXL] = {};
+int cnt = 0;
 
 int main()
 {
@@ -38,31 +39,32 @@ int main()
 	int buf_max = i;
 
 	brace_searching(buf, subbuf, opbuf, numbuf, convbuf, start, buf_max);
-	opnumbuflize_for_buf(buf, opbuf, numbuf, convbuf, buf_max);
+	opnumbuflize_for_buf(buf, opbuf, numbuf, convbuf, buf_max, cnt);
 	calc(numbuf, opbuf);
 
-	printf("%lf\n", numbuf[0]);
+	printf("%.2lf\n", numbuf[0]);
 
 	return 0;
 }
 
 int brace_searching(char * buf, char * subbuf, char * opbuf, double * numbuf, char * convbuf, int start, int buf_max)
 {
-	for(int i = start, end = 0, temp = start; i < buf_max; i++)
+	for(int i = start, end = 0, temp = start; i <= buf_max; i++)
 	{
 		if(buf[i] == '(')
 		{
 			start = i;
 			brace_searching(buf, subbuf, opbuf, numbuf, convbuf, start + 1, buf_max);//recursion
 		}
-		if(buf[i] == ')' && temp != start)
+		if(buf[i] == ')' && ((temp != start) || ((temp == 0) && (start == 0))))
 		{
 			end = i;
 			//계산
 			subbuflize(buf, subbuf, start, end);
-			opnumbuflize(subbuf, opbuf, numbuf, convbuf, start, end);
+			opnumbuflize(subbuf, opbuf, numbuf, convbuf, start, end, cnt);
+			cnt++;
 			calc(numbuf, opbuf);
-			rearrange(buf, subbuf, start, end);
+			rearrange(numbuf, buf, start, end, cnt);
 			return 1;
 		}
 	}
@@ -82,7 +84,7 @@ void subbuflize(char * buf, char * subbuf, int start, int end)
 	subbuf[num] = '\0';
 }
 
-void opnumbuflize(char * subbuf, char * opbuf, double * numbuf, char * convbuf, int start, int end)
+void opnumbuflize(char * subbuf, char * opbuf, double * numbuf, char * convbuf, int start, int end, int cnt)
 {
 	int num = end - start - 1;
 	int sub_end = 0;
@@ -95,9 +97,9 @@ void opnumbuflize(char * subbuf, char * opbuf, double * numbuf, char * convbuf, 
 			opbuf[j] = subbuf[i];//opbuf
 
 			sub_end = i - 1;
-			if(subbuf[sub_end] == 'S')
+			if(subbuf[sub_end] >= 'A')
 			{
-				numbuf[j++] = temporary;
+				numbuf[j++] = temporary[subbuf[sub_end] - 'A'];
 			}
 			else
 			{
@@ -108,21 +110,21 @@ void opnumbuflize(char * subbuf, char * opbuf, double * numbuf, char * convbuf, 
 	}
 }
 
-void opnumbuflize_for_buf(char * buf, char * opbuf, double * numbuf, char * convbuf, int buf_max)
+void opnumbuflize_for_buf(char * buf, char * opbuf, double * numbuf, char * convbuf, int buf_max, int cnt)
 {
 	int sub_end = 0;
 	int sub_start = 0;
 	int j = 0;
-	for(int i = 0; i < buf_max; i++)
+	for(int i = 0; i <= buf_max; i++)
 	{
 		if(buf[i] == '+' || buf[i] == '-' || buf[i] == '*' || buf[i] == '/' || buf[i] == '\0')
 		{
 			opbuf[j] = buf[i];//opbuf
 
 			sub_end = i - 1;
-			if(buf[sub_end] == 'S')
+			if((buf[sub_end]) >= 'A')
 			{
-				numbuf[j++] = temporary;
+				numbuf[j++] = temporary[buf[sub_end] - 'A'];
 			}
 			else
 			{
@@ -170,24 +172,13 @@ void calc(double * numbuf, char * opbuf)
 	int i = 0;
 	while(1)
 	{
-		if(opbuf[i] == '*')
-		{
-			numbuf[i] = numbuf[i] * numbuf[i+1];
-			one_pulln(numbuf, i+1);
-			one_pullc(opbuf, i);
-		}
-		i++;
-		if(opbuf[i] == '\0')
-			break;
-	}
-	i = 0;
-	while(1)
-	{
 		if(opbuf[i] == '/')
 		{
 			numbuf[i] = numbuf[i] / numbuf[i+1];
 			one_pulln(numbuf, i+1);
 			one_pullc(opbuf, i);
+			i = 0;
+			continue;
 		}
 		i++;
 		if(opbuf[i] == '\0')
@@ -196,11 +187,13 @@ void calc(double * numbuf, char * opbuf)
 	i = 0;
 	while(1)
 	{
-		if(opbuf[i] == '+')
+		if(opbuf[i] == '*')
 		{
-			numbuf[i] = numbuf[i] + numbuf[i+1];
+			numbuf[i] = numbuf[i] * numbuf[i+1];
 			one_pulln(numbuf, i+1);
 			one_pullc(opbuf, i);
+			i = 0;
+			continue;
 		}
 		i++;
 		if(opbuf[i] == '\0')
@@ -214,6 +207,23 @@ void calc(double * numbuf, char * opbuf)
 			numbuf[i] = numbuf[i] - numbuf[i+1];
 			one_pulln(numbuf, i+1);
 			one_pullc(opbuf, i);
+			i = 0;
+			continue;
+		}
+		i++;
+		if(opbuf[i] == '\0')
+			break;
+	}
+	i = 0;
+	while(1)
+	{
+		if(opbuf[i] == '+')
+		{
+			numbuf[i] = numbuf[i] + numbuf[i+1];
+			one_pulln(numbuf, i+1);
+			one_pullc(opbuf, i);
+			i = 0;
+			continue;
 		}
 		i++;
 		if(opbuf[i] == '\0')
@@ -221,12 +231,12 @@ void calc(double * numbuf, char * opbuf)
 	}
 }
 
-void rearrange(char * buf, char * subbuf, int start, int end)
+void rearrange(double * numbuf, char * buf, int start, int end, int cnt)
 {
-	temporary = buf[0];
+	temporary[cnt] = numbuf[0];
 	for(int i = start; i <= end; i++)
 	{
-		subbuf[i] = 'S';
+		buf[i] = 'A' + cnt;
 	}
 	return;
 }
