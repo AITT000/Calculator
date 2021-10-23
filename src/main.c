@@ -120,8 +120,6 @@ void opnumbuflize_for_buf(char * buf, char * opbuf, double * numbuf, char * conv
 		if(buf[i] == '+' || buf[i] == '-' || buf[i] == '*' || buf[i] == '/' || buf[i] == '\0')
 		{
 			opbuf[j] = buf[i];//opbuf
-			printf("here oper\n");
-			printf("%c\n", opbuf[j]);
 
 			sub_end = i - 1;
 			if((buf[sub_end]) >= 'A')
@@ -130,10 +128,7 @@ void opnumbuflize_for_buf(char * buf, char * opbuf, double * numbuf, char * conv
 			}
 			else
 			{
-			  printf("here\n");
 				numbuf[j++] = convert_buflize(buf, convbuf, sub_end, sub_start);
-				printf("%f\n", numbuf[j-1]);
-				getchar();
 			}
 			sub_start = i + 1;
 		}

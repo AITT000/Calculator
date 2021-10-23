@@ -4,7 +4,7 @@
 #define MAXL 100
 #define START 0
 
-int brace_searching(char * buf, char * subbuf, char * opbuf, char * numbuf, char * convbuf, int start, int buf_max);
+int brace_searching(char * buf, char * subbuf, char * opbuf, char * numbuf, char * convbuf, const int begin, int buf_max);
 void subbuflize(char * buf, char * subbuf, int start, int end);
 void opnumbuflize(char * subbuf, char * opbuf, double * numbuf, char * convbuf, int start, int end);
 void opnumbuflize_for_buf(char * buf, char * opbuf, double * numbuf, char * convbuf, int);
@@ -36,7 +36,7 @@ int main()
 	buf[i] = '\0';
 	int buf_max = i;
 
-	brace_searching(buf, subbuf, opbuf, numbuf, convbuf, START, buf_max);
+	brace_searching(buf, subbuf, opbuf, numbuf, convbuf, START, buf_max); // 여기 START를 꼭 넣고 싶은거면
 	opnumbuflize_for_buf(buf, opbuf, numbuf, convbuf, buf_max);
 	calc(numbuf, opbuf);
 
@@ -45,8 +45,9 @@ int main()
 	return 0;
 }
 
-int brace_searching(char * buf, char * subbuf, char * opbuf, char * numbuf, char * convbuf, int start, int buf_max)
+int brace_searching(char * buf, char * subbuf, char * opbuf, char * numbuf, char * convbuf, const int begin, int buf_max)
 {
+	int start = begin;
 	int temp;
 	for(int i = start, end = 0, temp = start; i < buf_max; i++)
 	{
