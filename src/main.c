@@ -44,6 +44,7 @@ int main()
 
 	printf("%.2lf\n", numbuf[0]);
 
+	getchar();
 	return 0;
 }
 

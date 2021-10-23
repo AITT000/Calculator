@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+// 디스코드 친구 추가는 뒤에 코드 네자리 더 넣어야 되네
+// 아이디에다가 1729 붙이면 된다.
+
 #define MAXL 100
 
 typedef struct _result {
@@ -36,7 +39,7 @@ int main(void) {
   }
 
   double result = handle_brackets(input, (int)NULL);
-  long result_long = (double)result;
+  long result_long = (long)result;
 
   if (result == (double)result_long) {
     printf("Result : %ld\n", result_long);
