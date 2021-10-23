@@ -49,14 +49,17 @@ int main()
 
 int brace_searching(char * buf, char * subbuf, char * opbuf, double * numbuf, char * convbuf, int start, int buf_max)
 {
-	for(int i = start, end = 0, temp = start; i <= buf_max; i++)
+	for(int i = start, temp = start; i <= buf_max; i++)
 	{
 		if(buf[i] == '(')
 		{
 			start = i;
 			brace_searching(buf, subbuf, opbuf, numbuf, convbuf, start + 1, buf_max);//recursion
 		}
-		if(buf[i] == ')' && ((temp != start) || ((temp == 0) && (start == 0))))
+	}
+	for(int i = start, end = 0; i <= buf_max && buf[start] == '('; i++)
+	{
+		if(buf[i] == ')')
 		{
 			end = i;
 			//계산
@@ -64,7 +67,10 @@ int brace_searching(char * buf, char * subbuf, char * opbuf, double * numbuf, ch
 			opnumbuflize(subbuf, opbuf, numbuf, convbuf, start, end, cnt);
 			cnt++;
 			calc(numbuf, opbuf);
-			rearrange(numbuf, buf, start, end, cnt);
+			if(start == 0)
+				rearrange(numbuf, buf, start, end, cnt);
+			else
+				rearrange(numbuf, buf, start, end, cnt);
 			return 1;
 		}
 	}
