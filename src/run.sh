@@ -1,3 +1,3 @@
 #!/bin/sh
-clang -o main main.c
-./main
+gcc -o main_fin main_fin.c
+./main_fin
